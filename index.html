@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>BOOGOS - Your Car, Your Control</title>
+<style>
+body{margin:0;background:#070F14;color:white;font-family:sans-serif;text-align:center}
+.header{padding:20px;font-size:28px;font-weight:bold;letter-spacing:2px}
+.card{background:#14212C;margin:15px;border-radius:20px;padding:20px}
+.btn{background:#FF2E2E;color:white;border:none;padding:16px;border-radius:30px;width:100%;font-size:18px;font-weight:bold}
+.blu{background:#0A2A32;border:1px solid #00E5CC;color:#00E5CC;padding:12px;border-radius:12px;margin:15px}
+</style>
+</head>
+<body>
+<div class="header">BOOGOS</div>
+<div class="card">
+<h2>⛽ Fuel 72% - 312 KM Left</h2>
+<h3 id="eng" style="color:#FF2E2E">ENGINE STOPPED</h3>
+<button class="btn" onclick="let e=document.getElementById('eng');if(e.innerText.includes('STOPPED')){e.innerText='ENGINE STARTED';e.style.color='#00E5CC';this.innerText='STOP ENGINE';this.style.background='#00E5CC';this.style.color='black'}else{e.innerText='ENGINE STOPPED';e.style.color='#FF2E2E';this.innerText='START ENGINE';this.style.background='#FF2E2E';this.style.color='white'}">START ENGINE</button>
+</div>
+<div class="blu">🔵 Bluetooth Connected • 50m Radius • DL8C-XXXX</div>
+<div class="card">
+<h3>📍 Nearby Places</h3>
+<p>⛽ Petrol Pump - 0.4km<br>🏥 Hospital - 0.7km<br>🍽️ Restaurant - 0.5km</p>
+<button class="btn" style="background:#00E5CC;color:black" onclick="alert('BOOGOS Tracker Active! Map Loading...')">OPEN LIVE MAP</button>
+</div>
+<p style="opacity:0.5">BOOGOS Connect - Beta V1.0 - 100% Made in India</p>
+</body>
+</html>
