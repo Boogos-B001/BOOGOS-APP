@@ -3,57 +3,50 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>BOOGOS - Live Tracker</title>
+<title>BOOGOS</title>
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <style>
 body{margin:0;background:#070F14;color:white;font-family:sans-serif;text-align:center}
-.header{padding:18px;font-size:28px;font-weight:bold;letter-spacing:2px}
-.card{background:#14212C;margin:12px;border-radius:20px;padding:18px}
-.btn{background:#00E5CC;color:black;border:none;padding:15px;border-radius:30px;width:100%;font-size:17px;font-weight:bold}
-#map{height:380px;width:100%;border-radius:15px;margin-top:12px;display:none}
-.blu{background:#0A2A32;border:1px solid #00E5CC;color:#00E5CC;padding:10px;border-radius:12px;margin:12px;font-size:14px}
+.card{background:#14212C;margin:15px;border-radius:20px;padding:20px}
+.btn{background:#00E5CC;color:black;border:none;padding:16px;border-radius:30px;width:100%;font-size:18px;font-weight:bold;margin-top:10px}
+#map{height:400px;width:100%;border-radius:15px;margin-top:15px}
 </style>
 </head>
 <body>
-<div class="header">BOOGOS</div>
+<h1 style="padding:15px">BOOGOS</h1>
 <div class="card">
-<h2 style="margin:5px">⛽ Fuel 72% - 312 KM Left</h2>
+<h2>⛽ Fuel 72% - 312 KM Left</h2>
 <h3 id="eng" style="color:#00E5CC">ENGINE STARTED</h3>
-<button class="btn" style="background:#00E5CC" id="engBtn" onclick="toggleEng()">STOP ENGINE</button>
+<button class="btn" onclick="let e=document.getElementById('eng'); e.innerText=e.innerText.includes('STARTED')?'ENGINE STOPPED':'ENGINE STARTED'">START / STOP ENGINE</button>
 </div>
-<div class="blu">🔵 Bluetooth Connected • 50m Radius • DL8C-XXXX</div>
 <div class="card">
-<h3>📍 Nearby Places</h3>
-<p id="near">⛽ Petrol Pump - 0.4km<br>🏥 Hospital - 0.7km<br>🍽️ Restaurant - 0.5km</p>
-<button class="btn" onclick="openMap()">OPEN LIVE MAP</button>
-<div id="map"></div>
-<p id="locText" style="font-size:13px;opacity:0.7;margin-top:8px"></p>
+<h3>📍 LIVE TRACKER</h3>
+<button class="btn" id="mapBtn" onclick="startTracker()">📡 OPEN LIVE MAP - TRACK NOW</button>
+<div id="map" style="display:none"></div>
+<p id="status"></p>
 </div>
-<p style="opacity:0.5;font-size:12px">BOOGOS Connect - Beta V1.0 - 100% Made in India</p>
 <script>
-let map, marker;
-function toggleEng(){
- let e=document.getElementById('eng'), b=document.getElementById('engBtn');
- if(e.innerText.includes('STARTED')){e.innerText='ENGINE STOPPED';e.style.color='#FF2E2E';b.innerText='START ENGINE';b.style.background='#FF2E2E';b.style.color='white';}
- else{e.innerText='ENGINE STARTED';e.style.color='#00E5CC';b.innerText='STOP ENGINE';b.style.background='#00E5CC';b.style.color='black';}
-}
-function openMap(){
+function startTracker(){
+ let btn=document.getElementById('mapBtn');
+ btn.innerText="LOCATING...";
  document.getElementById('map').style.display='block';
- document.getElementById('locText').innerText='📡 Locating... GPS On Karo';
- if(navigator.geolocation){
-  navigator.geolocation.getCurrentPosition(pos=>{
-   let lat=pos.coords.latitude, lng=pos.coords.longitude;
-   document.getElementById('locText').innerText='✅ Live: '+lat.toFixed(5)+', '+lng.toFixed(5)+' | Speed: 0 km/h';
-   if(!map){
-    map=L.map('map').setView([lat,lng],16);
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
-    marker=L.marker([lat,lng]).addTo(map).bindPopup('🚗 BOOGOS - Your Vehicle').openPopup();
-    L.marker([lat+0.002,lng+0.001]).addTo(map).bindPopup('⛽ Petrol Pump - 0.4km');
-    L.marker([lat-0.001,lng-0.002]).addTo(map).bindPopup('🏥 Hospital - 0.7km');
-   } else { map.setView([lat,lng],16); marker.setLatLng([lat,lng]); }
-   setTimeout(()=>map.invalidateSize(),300);
-  
+ document.getElementById('status').innerText='GPS permission maang raha hai... Allow karo';
+ 
+ navigator.geolocation.getCurrentPosition(function(p){
+   let lat=p.coords.latitude, lng=p.coords.longitude;
+   document.getElementById('status').innerText='✅ Live Location: '+lat.toFixed(4)+','+lng.toFixed(4);
+   btn.innerText='✅ TRACKING LIVE';
+   let map=L.map('map').setView([lat,lng], 15);
+   L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
+   L.marker([lat,lng]).addTo(map).bindPopup('🚗 Teri Gaadi Yaha Hai!').openPopup();
+   setTimeout(function(){ map.invalidateSize(); }, 500);
+ }, function(err){
+   alert('Bhai Location ALLOW karna padega! Phone setting me Location ON kar aur fir se Allow dabaa');
+   document.getElementById('status').innerText='❌ Location Blocked - Allow karo';
+   btn.innerText='TRY AGAIN - ALLOW LOCATION';
+ }, {enableHighAccuracy:true});
+}
 </script>
 </body>
 </html>
